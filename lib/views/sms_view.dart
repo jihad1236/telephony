@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sms_reader/views/bikashcashin_view.dart';
 import 'package:telephony/telephony.dart';
 import '../controllers/sms_controller.dart';
 import 'sms_conversation_view.dart';
@@ -17,6 +18,12 @@ class SmsView extends GetView<SmsController> {
         foregroundColor: Colors.black,
         elevation: 0,
         actions: [
+          TextButton.icon(
+            onPressed: () => Get.to(() => const BkashCashInView()),
+            icon: const Icon(Icons.account_balance_wallet, size: 18),
+            label: const Text('bKash'),
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFE2136E)),
+          ),
           Obx(() => controller.isLoading.value
               ? const Padding(
                   padding: EdgeInsets.all(16),
@@ -84,7 +91,10 @@ class SmsView extends GetView<SmsController> {
             return _ConversationCard(
               address: address,
               messages: msgs,
-              onTap: () => Get.to(() => SmsConversationView(address: address)),
+              onTap: () {
+              
+                Get.to(() => SmsConversationView(address: address));
+              },
             );
           },
         );
@@ -210,3 +220,4 @@ class _ConversationCard extends StatelessWidget {
     return '${date.day}/${date.month}/${date.year % 100}';
   }
 }
+
