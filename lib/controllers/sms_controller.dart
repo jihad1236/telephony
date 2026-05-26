@@ -12,14 +12,28 @@ class SmsController extends GetxController {
   final RxBool hasPermission = false.obs;
   final RxString error = ''.obs;
 
+  bool _isBkash(SmsMessage m) {
+    final body = m.body ?? '';
+    final address = (m.address ?? '').toLowerCase();
+    return address.contains('bkash') ||
+        body.toLowerCase().contains('bkash') ||
+        body.contains('bKa.sh');
+  }
+
   List<SmsMessage> get bkashCashInMessages {
-    final result = <SmsMessage>[];
-    for (final m in messages) {
-      final body = m.body ?? '';
-      final address = (m.address ?? '').toLowerCase();
-      final isBkash = address.contains('bkash') || body.toLowerCase().contains('bkash') || body.contains('bKa.sh');
-      if (isBkash && body.contains('Cash In')) result.add(m);
-    }
+    final result = messages.where((m) => _isBkash(m) && (m.body ?? '').contains('Cash In')).toList();
+    result.sort((a, b) => (b.date ?? 0).compareTo(a.date ?? 0));
+    return result;
+  }
+
+  List<SmsMessage> get bkashCashOutMessages {
+    final result = messages.where((m) => (m.body ?? '').startsWith('Cash Out Tk')).toList();
+    result.sort((a, b) => (b.date ?? 0).compareTo(a.date ?? 0));
+    return result;
+  }
+
+  List<SmsMessage> get bkashReceivedMessages {
+    final result = messages.where((m) => (m.body ?? '').startsWith('You have received Tk')).toList();
     result.sort((a, b) => (b.date ?? 0).compareTo(a.date ?? 0));
     return result;
   }
