@@ -18,6 +18,22 @@ class BkashCashInView extends GetView<SmsController> {
           backgroundColor: const Color(0xFFE2136E),
           foregroundColor: Colors.white,
           elevation: 0,
+          actions: [
+            Obx(() => controller.isLoading.value
+                ? const Padding(
+                    padding: EdgeInsets.all(14),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () => controller.loadMessages(),
+                  )),
+          ],
           bottom: const TabBar(
             indicatorColor: Colors.white,
             indicatorWeight: 3,
